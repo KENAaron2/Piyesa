@@ -16,18 +16,23 @@ export interface Message {
   timestamp: Date;
 }
 
+export interface ShopOption {
+  shopName: string;
+  price: number;
+  url: string;
+  inStock: boolean;
+  shipping?: string;
+}
+
 export interface AutoPart {
   id: string;
   name: string;
   brand: string;
-  price: number;
   compatibility: string;
   rating: number;
   image: string;
-  shopUrl: string;
-  shopName: string;
-  inStock: boolean;
   confidence: number;
+  shopOptions: ShopOption[];
 }
 
 interface ChatInterfaceProps {
