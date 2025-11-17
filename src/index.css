@@ -415,6 +415,10 @@
     position: relative;
   }
 
+  .sticky {
+    position: sticky;
+  }
+
   .-top-2 {
     top: calc(var(--spacing) * -2);
   }
@@ -502,6 +506,10 @@
     -webkit-box-orient: vertical;
     display: -webkit-box;
     overflow: hidden;
+  }
+
+  .block {
+    display: block;
   }
 
   .flex {

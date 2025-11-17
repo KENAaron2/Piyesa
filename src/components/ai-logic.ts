@@ -1,40 +1,88 @@
 import { AutoPart, ShopOption } from './ChatInterface';
+import { 
+  userExperiences, 
+  userQuestions, 
+  vehicleIssueDatabase, 
+  commonDTCCodes,
+  seasonalTips,
+  moneySavingTips,
+  recommendedTools 
+} from './user-knowledge-base';
 
-// Helper function to generate shop options with price variations
-function generateShopOptions(basePrice: number, inStock: boolean = true): ShopOption[] {
+// Helper function to generate shop-specific URLs with actual search parameters
+function generateShopURL(shopName: string, partName: string, brand: string, compatibility: string): string {
+  // Create a search query from part details
+  const searchQuery = encodeURIComponent(`${brand} ${partName} ${compatibility}`.trim());
+  const partNameOnly = encodeURIComponent(partName);
+  const brandAndPart = encodeURIComponent(`${brand} ${partName}`);
+  
+  switch (shopName) {
+    case 'Amazon':
+      // Amazon's search URL format
+      return `https://www.amazon.com/s?k=${searchQuery}&rh=n%3A15684181`;
+    
+    case 'Walmart':
+      // Walmart's search URL format
+      return `https://www.walmart.com/search?q=${searchQuery}&cat_id=91083`;
+    
+    case 'eBay':
+      // eBay's search URL format with auto parts category
+      return `https://www.ebay.com/sch/i.html?_nkw=${searchQuery}&_sacat=6030`;
+    
+    case 'Lazada':
+      // Lazada's search URL format
+      return `https://www.lazada.com/catalog/?q=${brandAndPart}&_keyori=ss&from=input&spm=a2o4l.searchlist.search.go.`;
+    
+    case 'Shopee':
+      // Shopee's search URL format
+      return `https://shopee.com/search?keyword=${brandAndPart}`;
+    
+    default:
+      return `https://www.google.com/search?q=${searchQuery}+buy`;
+  }
+}
+
+// Helper function to generate shop options with price variations and dynamic URLs
+function generateShopOptions(
+  basePrice: number, 
+  partName: string,
+  brand: string,
+  compatibility: string,
+  inStock: boolean = true
+): ShopOption[] {
   return [
     {
       shopName: 'Amazon',
       price: Number((basePrice * (0.95 + Math.random() * 0.1)).toFixed(2)),
-      url: 'https://www.amazon.com/s?k=auto+parts',
+      url: generateShopURL('Amazon', partName, brand, compatibility),
       inStock: inStock,
       shipping: 'Free shipping',
     },
     {
       shopName: 'Walmart',
       price: Number((basePrice * (0.92 + Math.random() * 0.12)).toFixed(2)),
-      url: 'https://www.walmart.com/browse/auto-parts',
+      url: generateShopURL('Walmart', partName, brand, compatibility),
       inStock: inStock,
       shipping: 'Free 2-day',
     },
     {
       shopName: 'eBay',
       price: Number((basePrice * (0.88 + Math.random() * 0.15)).toFixed(2)),
-      url: 'https://www.ebay.com/b/Car-Parts/6028/bn_1865334',
+      url: generateShopURL('eBay', partName, brand, compatibility),
       inStock: true,
       shipping: 'Varies',
     },
     {
       shopName: 'Lazada',
       price: Number((basePrice * (0.90 + Math.random() * 0.14)).toFixed(2)),
-      url: 'https://www.lazada.com/auto-parts/',
+      url: generateShopURL('Lazada', partName, brand, compatibility),
       inStock: inStock,
       shipping: 'Free shipping',
     },
     {
       shopName: 'Shopee',
       price: Number((basePrice * (0.87 + Math.random() * 0.16)).toFixed(2)),
-      url: 'https://shopee.com/Automotive-cat.11042501',
+      url: generateShopURL('Shopee', partName, brand, compatibility),
       inStock: inStock,
       shipping: 'Free shipping',
     },
@@ -461,6 +509,49 @@ function classifyQuery(input: string): {
 function handleTroubleshooting(input: string): string {
   const lowerInput = input.toLowerCase();
   
+  // Check for diagnostic trouble codes (DTCs)
+  const dtcMatch = input.match(/P\d{4}/i);
+  if (dtcMatch) {
+    const code = dtcMatch[0].toUpperCase();
+    const dtcInfo = commonDTCCodes[code as keyof typeof commonDTCCodes];
+    
+    if (dtcInfo) {
+      let response = `**Diagnostic Code: ${code}**\n\n`;
+      response += `**Description**: ${dtcInfo.description}\n\n`;
+      response += `**Common Causes**:\n${dtcInfo.commonCauses.map(c => `• ${c}`).join('\n')}\n\n`;
+      response += `**Urgency**: ${dtcInfo.urgency}\n\n`;
+      response += `**DIY Fix**: ${dtcInfo.diyFix}\n\n`;
+      response += `💡 **Tip**: Many auto parts stores offer free code reading and can help you diagnose the issue.\n\n`;
+      response += `Would you like me to recommend parts that might help fix this issue?`;
+      return response;
+    }
+  }
+  
+  // Search user experiences for similar issues
+  for (const experience of userExperiences) {
+    const issueKeywords = experience.issue.toLowerCase().split(' ');
+    const matchCount = issueKeywords.filter(keyword => 
+      lowerInput.includes(keyword) && keyword.length > 3
+    ).length;
+    
+    if (matchCount >= 2) {
+      let response = `**Similar User Experience**\n\n`;
+      response += `**Vehicle**: ${experience.vehicle}\n`;
+      response += `**Issue**: ${experience.issue}\n\n`;
+      response += `**Solution**: ${experience.solution}\n\n`;
+      
+      if (experience.tips && experience.tips.length > 0) {
+        response += `**Tips from users**:\n${experience.tips.map(t => `• ${t}`).join('\n')}\n\n`;
+      }
+      
+      if (experience.partsUsed && experience.partsUsed.length > 0) {
+        response += `Would you like me to recommend these parts for your vehicle?`;
+      }
+      
+      return response;
+    }
+  }
+  
   // Check for specific symptoms
   for (const [symptom, info] of Object.entries(vehicleKnowledge.symptoms)) {
     if (lowerInput.includes(symptom)) {
@@ -489,8 +580,27 @@ function handleTroubleshooting(input: string): string {
     }
   }
   
+  // Check for vehicle-specific issues
+  for (const [vehicle, generations] of Object.entries(vehicleIssueDatabase)) {
+    if (lowerInput.includes(vehicle)) {
+      for (const [yearRange, issues] of Object.entries(generations)) {
+        for (const issueInfo of issues) {
+          if (lowerInput.includes(issueInfo.issue.toLowerCase().substring(0, 15))) {
+            let response = `**Known Issue: ${vehicle.toUpperCase()} (${yearRange})**\n\n`;
+            response += `**Issue**: ${issueInfo.issue}\n\n`;
+            response += `**Description**: ${issueInfo.description}\n\n`;
+            response += `**Severity**: ${issueInfo.severity}\n\n`;
+            response += `**Solution**: ${issueInfo.solution}\n\n`;
+            response += `Is this similar to what you're experiencing? I can provide more specific guidance!`;
+            return response;
+          }
+        }
+      }
+    }
+  }
+  
   // Generic troubleshooting response
-  return `I can help diagnose your vehicle issue! To provide accurate troubleshooting, I need more details:\n\n• **When does it happen?** (starting, driving, braking, etc.)\n• **What exactly are you experiencing?** (noise, vibration, warning light, etc.)\n• **Your vehicle info**: Year, make, and model\n• **Recent events**: Any recent repairs or changes?\n\n**Common symptoms I can help with**:\n• Grinding or squealing noises\n• Engine overheating\n• Hard starting or won't start\n• Check engine light\n• Vibrations or shaking\n• Poor fuel economy\n• Smoke from exhaust\n\nDescribe your symptoms and I'll help identify the likely causes!`;
+  return `I can help diagnose your vehicle issue! To provide accurate troubleshooting, I need more details:\n\n• **When does it happen?** (starting, driving, braking, etc.)\n• **What exactly are you experiencing?** (noise, vibration, warning light, etc.)\n• **Your vehicle info**: Year, make, and model\n• **Recent events**: Any recent repairs or changes?\n\n**Common symptoms I can help with**:\n• Grinding or squealing noises\n• Engine overheating\n• Hard starting or won't start\n• Check engine light (I can explain diagnostic codes like P0300)\n• Vibrations or shaking\n• Poor fuel economy\n• Smoke from exhaust\n\n**💡 Did you know?** I have access to real user experiences and can share solutions that worked for others!\n\nDescribe your symptoms and I'll help identify the likely causes!`;
 }
 
 // Handle maintenance queries
@@ -624,7 +734,7 @@ export function generateAIResponse(
       ...part,
       id: `part-${Date.now()}-${idx}`,
       confidence: calculateConfidence(userInput, part),
-      shopOptions: generateShopOptions(partPrices[part.name] || 89.99, idx === 0),
+      shopOptions: generateShopOptions(partPrices[part.name] || 89.99, part.name, part.brand, part.compatibility, idx === 0),
     })).sort((a, b) => b.confidence - a.confidence);
 
   } else if (isOilQuery) {
@@ -638,7 +748,7 @@ export function generateAIResponse(
       ...part,
       id: `part-${Date.now()}-${idx}`,
       confidence: calculateConfidence(userInput, part),
-      shopOptions: generateShopOptions(partPrices[part.name] || 29.99, true),
+      shopOptions: generateShopOptions(partPrices[part.name] || 29.99, part.name, part.brand, part.compatibility, true),
     })).sort((a, b) => b.confidence - a.confidence);
 
   } else if (isFilterQuery) {
@@ -652,7 +762,7 @@ export function generateAIResponse(
       ...part,
       id: `part-${Date.now()}-${idx}`,
       confidence: calculateConfidence(userInput, part),
-      shopOptions: generateShopOptions(partPrices[part.name] || 19.99, true),
+      shopOptions: generateShopOptions(partPrices[part.name] || 19.99, part.name, part.brand, part.compatibility, true),
     })).sort((a, b) => b.confidence - a.confidence);
 
   } else if (isSparkPlugQuery) {
@@ -666,7 +776,7 @@ export function generateAIResponse(
       ...part,
       id: `part-${Date.now()}-${idx}`,
       confidence: calculateConfidence(userInput, part),
-      shopOptions: generateShopOptions(partPrices[part.name] || 34.99, true),
+      shopOptions: generateShopOptions(partPrices[part.name] || 34.99, part.name, part.brand, part.compatibility, true),
     })).sort((a, b) => b.confidence - a.confidence);
 
   } else if (isWiperQuery) {
@@ -679,7 +789,7 @@ export function generateAIResponse(
       ...part,
       id: `part-${Date.now()}-${idx}`,
       confidence: calculateConfidence(userInput, part),
-      shopOptions: generateShopOptions(partPrices[part.name] || 24.99, true),
+      shopOptions: generateShopOptions(partPrices[part.name] || 24.99, part.name, part.brand, part.compatibility, true),
     })).sort((a, b) => b.confidence - a.confidence);
 
   } else if (isBatteryQuery) {
@@ -692,7 +802,7 @@ export function generateAIResponse(
       ...part,
       id: `part-${Date.now()}-${idx}`,
       confidence: calculateConfidence(userInput, part),
-      shopOptions: generateShopOptions(partPrices[part.name] || 149.99, true),
+      shopOptions: generateShopOptions(partPrices[part.name] || 149.99, part.name, part.brand, part.compatibility, true),
     })).sort((a, b) => b.confidence - a.confidence);
 
   } else if (isTransmissionQuery) {
@@ -705,7 +815,7 @@ export function generateAIResponse(
       ...part,
       id: `part-${Date.now()}-${idx}`,
       confidence: calculateConfidence(userInput, part),
-      shopOptions: generateShopOptions(partPrices[part.name] || 24.99, true),
+      shopOptions: generateShopOptions(partPrices[part.name] || 24.99, part.name, part.brand, part.compatibility, true),
     })).sort((a, b) => b.confidence - a.confidence);
 
   } else {
