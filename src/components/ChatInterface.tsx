@@ -113,8 +113,8 @@ export function ChatInterface({ conversationId }: ChatInterfaceProps) {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto px-4 py-6 scrollbar-visible">
+    <div className="flex-1 flex flex-col h-full min-h-0 overflow-hidden">
+      <div className="flex-1 overflow-y-auto px-4 py-6">
         <div className="max-w-3xl mx-auto space-y-6">
           {messages.map((message) => (
             <ChatMessage key={message.id} message={message} />

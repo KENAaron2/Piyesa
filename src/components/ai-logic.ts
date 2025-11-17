@@ -6,7 +6,11 @@ import {
   commonDTCCodes,
   seasonalTips,
   moneySavingTips,
-  recommendedTools 
+  recommendedTools,
+  automotiveEncyclopedia,
+  performanceKnowledge,
+  winterDriving,
+  comprehensiveKnowledge
 } from './user-knowledge-base';
 
 // Helper function to generate shop-specific URLs with actual search parameters

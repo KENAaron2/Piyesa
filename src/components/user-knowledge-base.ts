@@ -606,3 +606,326 @@ export const recommendedTools = [
     priority: "Useful for electrical issues"
   }
 ];
+
+// Comprehensive automotive knowledge encyclopedia
+export const automotiveEncyclopedia = {
+  // Engine components and systems
+  engine: {
+    components: {
+      pistons: "Move up and down in cylinders, compress air-fuel mixture and transfer combustion force to crankshaft",
+      crankshaft: "Converts reciprocating motion of pistons into rotational motion",
+      camshaft: "Controls opening and closing of intake and exhaust valves",
+      valves: "Control flow of air-fuel mixture into cylinder and exhaust gases out",
+      sparkPlugs: "Ignite the air-fuel mixture in gasoline engines",
+      fuelInjectors: "Spray precise amounts of fuel into engine cylinders",
+      timingBelt: "Synchronizes crankshaft and camshaft rotation. Critical to replace per schedule (60k-100k miles)",
+      headGasket: "Seals cylinder head to engine block, prevents coolant and oil mixing"
+    },
+    types: {
+      inline4: "4 cylinders in a row. Most common in compact cars. Good fuel economy, simple design",
+      v6: "6 cylinders in V configuration. Balance of power and efficiency. Common in midsize cars and SUVs",
+      v8: "8 cylinders in V configuration. High power output. Found in trucks, sports cars, luxury vehicles",
+      boxer: "Horizontally opposed cylinders. Low center of gravity. Used by Subaru and Porsche",
+      rotary: "Uses rotors instead of pistons. Compact, high-revving. Rare (Mazda RX-7, RX-8)",
+      diesel: "Compression ignition. Better fuel economy and torque. More expensive to maintain",
+      hybrid: "Combines gasoline engine with electric motor. Excellent fuel economy",
+      electric: "Battery-powered electric motor only. Zero emissions, instant torque, low maintenance"
+    },
+    displacement: {
+      meaning: "Total volume of all cylinders. Measured in liters or cubic inches",
+      impact: "Larger displacement generally means more power but lower fuel economy",
+      examples: "1.5L (compact car), 2.5L (midsize sedan), 3.5L (SUV), 5.0L (truck/performance)"
+    }
+  },
+
+  // Transmission systems
+  transmission: {
+    types: {
+      manual: "Driver shifts gears manually. More engaging, better fuel economy, cheaper to maintain. Becoming rare",
+      automatic: "Shifts gears automatically using torque converter. Smooth, convenient, most common",
+      cvt: "Continuously Variable Transmission. No fixed gears, infinite ratios. Best fuel economy but some complain about feel",
+      dct: "Dual Clutch Transmission. Two clutches for odd/even gears. Fast shifts, sporty feel. Used in performance cars",
+      amt: "Automated Manual. Manual transmission with automatic clutch. Budget-friendly auto option"
+    },
+    maintenance: {
+      fluidChange: "30k-60k miles for most automatics. Some 'lifetime' fluids still benefit from changes",
+      symptoms: "Slipping, hard shifts, delayed engagement, whining noise all indicate problems",
+      cost: "Transmission repairs are expensive ($1500-$5000). Maintenance is critical"
+    }
+  },
+
+  // Brake systems
+  brakes: {
+    types: {
+      disc: "Most common. Better heat dissipation, more effective. Front brakes on most cars",
+      drum: "Older technology. Sometimes used on rear of economy cars. Less effective but cheaper",
+      abs: "Anti-lock Braking System. Prevents wheel lockup during hard braking. Standard on modern cars",
+      ebd: "Electronic Brake Distribution. Optimizes brake force to each wheel",
+      brakeAssist: "Detects emergency braking and applies maximum force"
+    },
+    components: {
+      pads: "Friction material that presses against rotor. Wear item, 30k-70k miles",
+      rotors: "Metal disc that pads clamp onto. Can warp from heat. Last 50k-70k miles",
+      calipers: "House brake pads and use hydraulic pressure to clamp pads onto rotors",
+      masterCylinder: "Converts brake pedal pressure into hydraulic pressure",
+      brakeFluid: "Hydraulic fluid. Absorbs moisture over time. Should be flushed every 2-3 years"
+    }
+  },
+
+  // Suspension and steering
+  suspension: {
+    components: {
+      shocks: "Dampen spring oscillations. Absorb bumps. Replace at 50k-100k miles",
+      struts: "Combine shock and spring in one unit. Structural component. More expensive than shocks",
+      springs: "Support vehicle weight, absorb impacts. Coil, leaf, or air springs",
+      controlArms: "Connect suspension to frame. Allow wheel movement. Bushings wear out",
+      ballJoints: "Pivot points for control arms. Critical safety item when worn",
+      swaybars: "Reduce body roll in turns. Improve handling"
+    },
+    alignment: {
+      camber: "Inward/outward tilt of wheel top. Affects tire wear and handling",
+      caster: "Forward/backward tilt of steering axis. Affects stability",
+      toe: "Whether wheels point in or out. Most common cause of tire wear",
+      when: "After hitting potholes, with uneven tire wear, or annually"
+    }
+  },
+
+  // Electrical system
+  electrical: {
+    battery: {
+      function: "Stores electrical energy, starts engine, powers accessories when engine off",
+      voltage: "12V standard. Fully charged is 12.6V. Below 12.4V is getting weak",
+      testing: "Load test at auto parts store. Check voltage with multimeter",
+      lifespan: "3-5 years average. Heat kills batteries faster than cold",
+      maintenance: "Check terminals for corrosion. Keep charged. Avoid deep discharge"
+    },
+    alternator: {
+      function: "Generates electricity when engine runs. Charges battery, powers electrical systems",
+      output: "13.5-14.5V when running. Lower indicates failing alternator",
+      symptoms: "Dim lights, battery warning light, electrical issues, dead battery",
+      lifespan: "80k-150k miles typically"
+    },
+    starter: {
+      function: "Electric motor that cranks engine to start it",
+      symptoms: "Clicking sound, slow crank, no crank, grinding noise",
+      lifespan: "100k-150k miles average"
+    }
+  },
+
+  // Cooling system
+  cooling: {
+    components: {
+      radiator: "Heat exchanger that cools coolant using airflow",
+      waterPump: "Circulates coolant through engine and radiator",
+      thermostat: "Controls coolant flow to maintain operating temperature (usually 195-220°F)",
+      coolant: "Liquid that absorbs engine heat. Antifreeze prevents freezing and boiling",
+      radiatorCap: "Maintains system pressure (15-16 PSI). Raises boiling point",
+      fan: "Pulls air through radiator when vehicle stationary or low speed"
+    },
+    maintenance: {
+      coolantChange: "30k-50k miles. Becomes acidic and loses protective properties",
+      mixRatio: "50/50 coolant to water. Protects to -34°F and raises boiling point",
+      checking: "Check level when cold. Never open when hot - severe burn risk"
+    }
+  },
+
+  // Fuel system
+  fuel: {
+    types: {
+      regular87: "87 octane. Sufficient for most engines. Using higher is waste of money if not required",
+      midgrade89: "89 octane. Rarely required. Marketing gimmick for most cars",
+      premium91: "91-93 octane. Required for high-compression engines. Prevents knocking",
+      diesel: "Compression ignition fuel. More energy dense. Not interchangeable with gasoline",
+      e85: "85% ethanol. Cheaper, less energy. Requires flex-fuel vehicle"
+    },
+    components: {
+      fuelPump: "Pumps fuel from tank to engine. In-tank on most modern cars",
+      fuelFilter: "Removes contaminants. Often in tank on newer cars (not serviceable)",
+      injectors: "Spray fuel into engine. Can clog. Cleaning additives can help",
+      fuelTank: "Stores fuel. Can rust internally on older vehicles"
+    }
+  },
+
+  // Tires and wheels
+  tires: {
+    types: {
+      allSeason: "Good compromise for most conditions. Most common. 3PMSF symbol for better winter traction",
+      summer: "Best dry/wet performance. Poor in cold/snow. Performance tires",
+      winter: "Soft compound for cold weather. Excellent snow/ice traction. Wear fast in heat",
+      allTerrain: "For trucks/SUVs. On-road comfort with off-road capability",
+      mudTerrain: "Aggressive off-road tires. Loud on road, poor fuel economy"
+    },
+    reading: {
+      example: "P215/65R15 95H",
+      p: "Passenger vehicle",
+      width215: "215mm tire width",
+      aspect65: "65% aspect ratio (sidewall height = 65% of width)",
+      r: "Radial construction",
+      diameter15: "15 inch wheel diameter",
+      loadIndex95: "1521 lbs max load per tire",
+      speedH: "H = 130 mph max speed rating"
+    },
+    maintenance: {
+      pressure: "Check monthly when cold. Door jamb sticker has correct PSI (NOT sidewall max)",
+      rotation: "Every 5k-7k miles. Extends tire life, even wear",
+      alignment: "Annually or with uneven wear. Saves tires, improves handling",
+      balancing: "When installing or if vibration. Small weights on wheel",
+      treadDepth: "Penny test: Insert penny with Lincoln's head down. If you see top of head, replace. Legal minimum 2/32\", replace at 4/32\""
+    }
+  },
+
+  // Fluids
+  fluids: {
+    engineOil: {
+      function: "Lubricates moving parts, removes heat, cleans engine, prevents corrosion",
+      types: "Conventional (cheap, 3k-5k miles), Synthetic blend (mid-range), Full synthetic (best, 7.5k-10k miles)",
+      viscosity: "5W-30 most common. First number is cold viscosity, second is hot. Use what manual specifies",
+      checking: "Monthly when cold. Dipstick should be between MIN and MAX marks"
+    },
+    transmissionFluid: {
+      function: "Lubricates gears, cools transmission, provides hydraulic pressure",
+      color: "Should be red/pink. Brown or burnt smell indicates problems",
+      change: "30k-60k miles despite 'lifetime' claims from manufacturers"
+    },
+    brakeFluid: {
+      function: "Hydraulic fluid for brake system",
+      types: "DOT 3, DOT 4, DOT 5.1 (glycol-based). DOT 5 (silicone, rare). Never mix types",
+      hygroscopic: "Absorbs moisture from air. Moisture lowers boiling point. Flush every 2-3 years",
+      checking: "Should be clear to light amber. Dark brown = needs changing"
+    },
+    coolant: {
+      types: "Green (traditional), Orange (Dexcool), Pink/Blue (Asian). Use type specified by manufacturer",
+      mixture: "50/50 with distilled water. Pre-mixed available for convenience",
+      testing: "Hydrometer tests freeze protection. Should protect to -30°F minimum"
+    },
+    powerSteeringFluid: {
+      function: "Hydraulic fluid for power steering assist",
+      checking: "Reservoir has MIN/MAX marks. Check when engine cold",
+      note: "Many new cars use electric power steering (no fluid)"
+    }
+  },
+
+  // Common repairs and costs
+  repairs: {
+    typical: {
+      oilChange: "$30-75 (DIY) or $50-125 (shop)",
+      brakes: "$150-450 per axle (pads), $250-600 per axle (pads + rotors)",
+      battery: "$100-250 installed",
+      alternator: "$300-800 including labor",
+      starter: "$250-600 including labor",
+      waterPump: "$400-900 including labor",
+      timingBelt: "$500-1500 (interference engine = replace water pump too)",
+      headGasket: "$1500-3000 (labor intensive)",
+      transmission: "$1500-5000 for rebuild, $3000-8000 for replacement",
+      clutch: "$800-1500 including labor",
+      shocksStruts: "$300-800 per axle including labor",
+      catalyticConverter: "$800-2500 (expensive due to precious metals)"
+    }
+  },
+
+  // Warning lights
+  warningLights: {
+    checkEngine: "Can be minor (gas cap) or major (catalytic converter). Get codes read. Yellow = drive carefully, Red = stop immediately",
+    oil: "Low oil pressure. STOP IMMEDIATELY. Can destroy engine in minutes",
+    battery: "Charging system problem. Usually alternator. May die soon, get tested",
+    brake: "Brake system issue or parking brake on. Check parking brake first. If not, get inspected immediately",
+    abs: "ABS malfunction. Regular brakes still work but no anti-lock",
+    temperature: "Engine overheating. Pull over immediately. Can warp heads/blow gaskets",
+    tpms: "Tire pressure low. Check all tires including spare. 1 PSI drop per 10°F temperature change",
+    traction: "Flashing = system working. Solid = system fault",
+    airbag: "Airbag system fault. May not deploy in accident. Get diagnosed",
+    maintenanceRequired: "Reminder for scheduled service. Not urgent but don't ignore"
+  },
+
+  // Fuel economy tips
+  fuelEconomy: {
+    tips: [
+      "Keep tires properly inflated - improves MPG by 3%",
+      "Remove excess weight - 100 lbs = 1-2% MPG loss",
+      "Accelerate smoothly - aggressive driving reduces MPG by 15-30%",
+      "Use cruise control on highway - maintains steady speed",
+      "Avoid idling - turn off engine if stopped over 30 seconds",
+      "Keep engine tuned - bad spark plugs reduce MPG by 30%",
+      "Replace air filter - clogged filter reduces MPG by 10%",
+      "Use recommended oil grade - wrong viscosity reduces MPG",
+      "Close windows at highway speeds - reduces drag",
+      "Remove roof racks when not in use - reduces drag"
+    ]
+  },
+
+  // Vehicle buying advice
+  buying: {
+    new: {
+      pros: ["Latest technology", "Factory warranty", "No hidden issues", "Latest safety features"],
+      cons: ["Steep depreciation (20-30% first year)", "Higher insurance", "Higher price"],
+      tips: ["Negotiate from invoice price, not MSRP", "Get quotes from multiple dealers", "End of month/year better deals", "Consider previous year models"]
+    },
+    used: {
+      pros: ["Lower price", "Slower depreciation", "Lower insurance", "More car for money"],
+      cons: ["Unknown history", "No warranty (usually)", "Potential hidden problems"],
+      tips: [
+        "Get pre-purchase inspection ($100-150, worth it)",
+        "Check Carfax/AutoCheck for history",
+        "Look for single-owner, complete service records",
+        "Avoid flood/salvage titles",
+        "Check for recalls and ensure completed",
+        "Test drive in varied conditions"
+      ]
+    },
+    certified: {
+      description: "Used car sold by dealer with extended warranty",
+      benefits: ["Inspected", "Limited warranty", "Often roadside assistance"],
+      cost: "$1000-3000 more than regular used"
+    }
+  }
+};
+
+// Performance and modifications
+export const performanceKnowledge = {
+  common: {
+    coldAirIntake: "Brings cooler air to engine. 5-15 HP gain. $150-400. Mostly sound improvement",
+    exhaust: "Cat-back exhaust. 5-20 HP gain. $300-1500. Better sound, small power gain",
+    tune: "ECU remap. 10-50 HP gain depending on engine. $400-1000. Best HP per dollar for turbo cars",
+    turbo: "Forced induction. 50-100+ HP gain. $3000-8000. Complex install, supporting mods needed",
+    suspension: "Coilovers or springs/shocks. Improves handling. $500-3000. Reduces ride comfort",
+    brakes: "Larger rotors, better pads. Improves stopping. $800-3000. Needed for track use"
+  },
+  cautions: [
+    "Modifications may void warranty",
+    "Some mods illegal in certain states (especially emissions-related)",
+    "Insurance may increase or coverage denied",
+    "Improper mods can damage engine/drivetrain",
+    "Always support more power with better brakes"
+  ]
+};
+
+// Winter driving tips
+export const winterDriving = [
+  "Winter tires make huge difference below 45°F - more important than AWD",
+  "Accelerate and brake gently to avoid wheel spin/lockup",
+  "Increase following distance to 8-10 seconds",
+  "Clear ALL snow from car including roof (safety and legal)",
+  "Keep gas tank at least half full - prevents fuel line freeze",
+  "Pack emergency kit: blanket, flashlight, ice scraper, jumper cables, sand/kitty litter",
+  "If stuck, don't spin tires - makes it worse. Rock gently or use sand",
+  "Black ice forms on bridges first - extra caution",
+  "ABS: Don't pump brakes, press and hold firmly",
+  "If skidding: Steer where you want to go, don't brake"
+];
+
+// Extreme knowledge - everything else
+export const comprehensiveKnowledge = {
+  carCare: {
+    washing: "Hand wash or touchless automatic. Brush automatics scratch paint. Wash every 2 weeks. Wax 2-3 times per year",
+    waxing: "Protects paint. 2-3 times per year. Ceramic coating lasts longer but expensive",
+    interior: "Vacuum weekly. Condition leather every 3-6 months. UV protectant prevents cracking"
+  },
+  
+  mythBusting: {
+    myth1: "Premium gas cleans engine better - FALSE. No cleaning additives. Use recommended octane only",
+    myth2: "Engine needs to warm up before driving - FALSE (modern cars). 30 seconds then drive gently",
+    myth3: "Change oil every 3000 miles - OUTDATED. Modern oils last 7500-10000 miles",
+    myth4: "Manual transmission gets better MPG - MOSTLY FALSE now. Modern autos equal or better",
+    myth5: "Larger wheels improve performance - PARTLY FALSE. Heavier wheels reduce acceleration"
+  }
+};
