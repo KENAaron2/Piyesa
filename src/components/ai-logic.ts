@@ -1,4 +1,4 @@
-import { AutoPart, ShopOption } from './ChatInterface';
+import { AutoPart, ShopOption } from './types';
 import { 
   userExperiences, 
   userQuestions, 

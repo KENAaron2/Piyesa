@@ -1,7 +1,7 @@
 import { ExternalLink, Star, CheckCircle, Package, ShoppingCart, TrendingDown } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { AutoPart } from './ChatInterface';
+import { AutoPart } from './types';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 
 interface PartCardProps {

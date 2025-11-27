@@ -1,5 +1,5 @@
 import { User, ScanSearch } from 'lucide-react';
-import { Message } from './ChatInterface';
+import { Message } from './types';
 import { PartCard } from './PartCard';
 
 interface ChatMessageProps {

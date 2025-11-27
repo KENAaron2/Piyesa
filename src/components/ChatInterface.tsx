@@ -3,53 +3,16 @@ import { Button } from './ui/button';
 import { Textarea } from './ui/textarea';
 import { Send, Plus, X } from 'lucide-react';
 import { ChatMessage } from './ChatMessage';
-import { generateAIResponse } from './ai-logic';
-import { DEFAULT_WELCOME_MESSAGE } from './DefaultMessage';
-
-export interface Message {
-  id: string;
-  role: 'user' | 'assistant';
-  content: string;
-  parts?: AutoPart[];
-  image?: string;
-  imageAnalysis?: string;
-  timestamp: Date;
-}
-
-export interface ShopOption {
-  shopName: string;
-  price: number;
-  url: string;
-  inStock: boolean;
-  shipping?: string;
-}
-
-export interface AutoPart {
-  id: string;
-  name: string;
-  brand: string;
-  compatibility: string;
-  rating: number;
-  image: string;
-  confidence: number;
-  shopOptions: ShopOption[];
-}
+import { Message } from './types';
 
 interface ChatInterfaceProps {
-  conversationId: string;
+  messages: Message[];
+  onSendMessage: (content: string, image: string | null) => void;
+  isTyping: boolean;
 }
 
-export function ChatInterface({ conversationId }: ChatInterfaceProps) {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      role: 'assistant',
-      content: DEFAULT_WELCOME_MESSAGE,
-      timestamp: new Date(),
-    },
-  ]);
+export function ChatInterface({ messages, onSendMessage, isTyping }: ChatInterfaceProps) {
   const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -76,40 +39,16 @@ export function ChatInterface({ conversationId }: ChatInterfaceProps) {
     }
   };
 
-  const handleSend = async () => {
+  const handleSend = () => {
     if (!input.trim() && !uploadedImage) return;
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: input || 'What part is this?',
-      image: uploadedImage || undefined,
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
+    
+    onSendMessage(input, uploadedImage);
+    
     setInput('');
-    const currentImage = uploadedImage;
     setUploadedImage(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
-    setIsTyping(true);
-
-    // Simulate AI processing
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(input, currentImage);
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: 'assistant',
-        content: aiResponse.message,
-        parts: aiResponse.parts,
-        imageAnalysis: aiResponse.imageAnalysis,
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, assistantMessage]);
-      setIsTyping(false);
-    }, 2000);
   };
 
   return (
