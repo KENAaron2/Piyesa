@@ -1,16 +1,20 @@
-export const DEFAULT_WELCOME_MESSAGE = `Hello! I'm your AutoParts AI Assistant. I can help you find the right auto parts for your vehicle using advanced machine learning algorithms.
+export const DEFAULT_WELCOME_MESSAGE = `Welcome to **PIYESA** (Parts Identification and Yield-based Engine Search Assistant)! 
 
-**How I can help:**
-- Recommend the best auto parts based on your vehicle
-- Compare prices from multiple online retailers
-- Provide compatibility information
-- Show real-time availability and ratings
+I'm your intelligent automotive assistant, powered by advanced AI to help you identify car parts and find exactly what you need.
 
-**To get started, tell me:**
-• Your vehicle year, make, and model
-• The specific part you need
-• Any brand preferences (optional)
+** Featured: Visual Parts Identification**
+Just like **Google Lens**, you can upload a photo of any car part, and I'll identify it for you!
+1. Click the **+** button next to the chat input
+2. Upload a clear photo of the part
+3. I'll analyze it, tell you what it is, and where to buy it!
 
-**Example:** "I need brake pads for my 2018 Honda Civic"
+**I can also help you with:**
+-  Troubleshooting vehicle issues
+-  Comparing prices across Amazon, Walmart, eBay, Lazada, and Shopee
+-  Maintenance schedules and "How-to" guides
+-  Checking compatibility for your specific vehicle
 
-I'll analyze thousands of options and recommend the best matches based on compatibility, ratings, price, and availability!`;
+**To get started, just ask:**
+"What is this part?" (with an image)
+"I need brake pads for a 2018 Honda Civic"
+"Why is my car making a grinding noise?"`;

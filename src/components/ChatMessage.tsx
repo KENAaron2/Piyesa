@@ -42,7 +42,14 @@ export function ChatMessage({ message }: ChatMessageProps) {
               </div>
             </div>
           )}
-          <p className="whitespace-pre-wrap">{message.content}</p>
+          <div className="whitespace-pre-wrap text-sm leading-relaxed">
+            {message.content.split(/(\*\*.*?\*\*)/g).map((part, i) => {
+              if (part.startsWith('**') && part.endsWith('**')) {
+                return <strong key={i}>{part.slice(2, -2)}</strong>;
+              }
+              return <span key={i}>{part}</span>;
+            })}
+          </div>
           {message.parts && message.parts.length > 0 && (
             <div className="mt-4 space-y-3">
               {message.parts.map((part) => (

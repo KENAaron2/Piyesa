@@ -94,8 +94,8 @@ export function Sidebar({
             <Wrench className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h2 className="text-sm tracking-wide">AutoParts AI</h2>
-            <p className="text-xs text-gray-400">Your Car Expert</p>
+            <h2 className="text-sm tracking-wide font-bold">PIYESA</h2>
+            <p className="text-xs text-gray-400">Parts Identification AI</p>
           </div>
         </div>
       </div>

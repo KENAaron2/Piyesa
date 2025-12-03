@@ -203,8 +203,8 @@ export default function App() {
         <header className="bg-white border-b px-6 py-4 flex items-center gap-3 flex-shrink-0">
           <Wrench className="w-6 h-6 text-blue-600" />
           <div>
-            <h1>AutoParts AI Assistant</h1>
-            <p className="text-gray-500 text-sm">ML-Powered Auto Parts Recommendations</p>
+            <h1>PIYESA</h1>
+            <p className="text-gray-500 text-sm">Parts Identification and Yield-based Engine Search Assistant</p>
           </div>
         </header>
         <ChatInterface 

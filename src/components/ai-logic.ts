@@ -10,7 +10,9 @@ import {
   automotiveEncyclopedia,
   performanceKnowledge,
   winterDriving,
-  comprehensiveKnowledge
+  comprehensiveKnowledge,
+  partTroubleshooting,
+  automotiveDiagnosticKnowledge
 } from './user-knowledge-base';
 
 // Helper function to generate shop-specific URLs with actual search parameters
@@ -473,22 +475,22 @@ function extractPartTypeFromImage(imageData: string | null): string[] {
 
 // Classify query type
 function classifyQuery(input: string): {
-  type: 'troubleshooting' | 'maintenance' | 'howto' | 'specification' | 'parts' | 'general';
+  type: 'troubleshooting' | 'maintenance' | 'howto' | 'specification' | 'parts' | 'general' | 'seasonal' | 'money' | 'tools' | 'encyclopedia';
   confidence: number;
   keywords: string[];
 } {
   const lowerInput = input.toLowerCase();
   
   // Troubleshooting indicators
-  const troubleshootingKeywords = ['noise', 'sound', 'problem', 'issue', 'wrong', 'broken', 'smoking', 'overheating', 'vibrat', 'shak', 'grinding', 'squeal', 'won\'t start', 'hard to start', 'check engine', 'warning light', 'smell'];
+  const troubleshootingKeywords = ['noise', 'sound', 'problem', 'issue', 'wrong', 'broken', 'smoking', 'overheating', 'vibrat', 'shak', 'grinding', 'squeal', 'won\'t start', 'hard to start', 'check engine', 'warning light', 'smell', 'leaking', 'failing'];
   const hasTroubleshooting = troubleshootingKeywords.some(k => lowerInput.includes(k));
   
   // Maintenance indicators
-  const maintenanceKeywords = ['when', 'how often', 'schedule', 'interval', 'replace', 'service', 'mileage', 'maintain'];
+  const maintenanceKeywords = ['when', 'how often', 'schedule', 'interval', 'replace', 'service', 'mileage', 'maintain', 'tune up', 'tune-up'];
   const hasMaintenance = maintenanceKeywords.some(k => lowerInput.includes(k));
   
   // How-to indicators
-  const howtoKeywords = ['how to', 'how do i', 'how can i', 'steps', 'guide', 'install', 'change', 'replace', 'fix', 'repair'];
+  const howtoKeywords = ['how to', 'how do i', 'how can i', 'steps', 'guide', 'install', 'change', 'fix', 'repair'];
   const hasHowto = howtoKeywords.some(k => lowerInput.includes(k));
   
   // Specification indicators
@@ -496,11 +498,31 @@ function classifyQuery(input: string): {
   const hasSpec = specKeywords.some(k => lowerInput.includes(k));
   
   // Parts indicators
-  const partsKeywords = ['brake', 'oil', 'filter', 'spark plug', 'battery', 'tire', 'wiper', 'need', 'buy', 'recommend', 'best'];
+  const partsKeywords = ['brake', 'oil', 'filter', 'spark plug', 'battery', 'tire', 'wiper', 'need', 'buy', 'recommend', 'best', 'cost', 'price'];
   const hasParts = partsKeywords.some(k => lowerInput.includes(k));
 
+  // Seasonal indicators
+  const seasonalKeywords = ['winter', 'summer', 'cold', 'hot', 'rain', 'snow', 'season', 'driving in'];
+  const hasSeasonal = seasonalKeywords.some(k => lowerInput.includes(k));
+
+  // Money saving indicators
+  const moneyKeywords = ['save money', 'cheap', 'budget', 'expensive', 'discount', 'deals', 'saving tips'];
+  const hasMoney = moneyKeywords.some(k => lowerInput.includes(k));
+
+  // Tools indicators
+  const toolsKeywords = ['tool', 'wrench', 'jack', 'equipment', 'need to buy', 'what tools'];
+  const hasTools = toolsKeywords.some(k => lowerInput.includes(k));
+
+  // Encyclopedia indicators
+  const encycloKeywords = ['what is', 'how does', 'explain', 'function', 'system', 'component', 'definition'];
+  const hasEncyclo = encycloKeywords.some(k => lowerInput.includes(k));
+
   // Determine primary type
+  if (hasSeasonal) return { type: 'seasonal', confidence: 0.85, keywords: seasonalKeywords };
   if (hasHowto) return { type: 'howto', confidence: 0.9, keywords: howtoKeywords };
+  if (hasMoney) return { type: 'money', confidence: 0.85, keywords: moneyKeywords };
+  if (hasTools) return { type: 'tools', confidence: 0.85, keywords: toolsKeywords };
+  if (hasEncyclo) return { type: 'encyclopedia', confidence: 0.8, keywords: encycloKeywords };
   if (hasTroubleshooting) return { type: 'troubleshooting', confidence: 0.85, keywords: troubleshootingKeywords };
   if (hasMaintenance && !hasParts) return { type: 'maintenance', confidence: 0.8, keywords: maintenanceKeywords };
   if (hasSpec) return { type: 'specification', confidence: 0.75, keywords: specKeywords };
@@ -553,6 +575,35 @@ function handleTroubleshooting(input: string): string {
       }
       
       return response;
+    }
+  }
+
+  // Check partTroubleshooting
+  for (const [systemName, systemParts] of Object.entries(partTroubleshooting)) {
+    for (const [partName, details] of Object.entries(systemParts)) {
+      if (lowerInput.includes(partName.toLowerCase()) || lowerInput.includes(systemName.toLowerCase())) {
+         let response = `**Troubleshooting: ${partName.replace(/([A-Z])/g, ' $1').trim()}**\n\n`;
+         response += `**Common Symptoms**: ${details.symptoms}\n\n`;
+         response += `**Possible Causes**:\n${details.possibleCauses.map((c: string) => `• ${c}`).join('\n')}\n\n`;
+         response += `**Possible Solutions**:\n${details.possibleSolutions.map((s: string) => `• ${s}`).join('\n')}\n`;
+         return response;
+      }
+    }
+  }
+
+  // Check automotiveDiagnosticKnowledge components
+  for (const component of automotiveDiagnosticKnowledge.components) {
+    if (lowerInput.includes(component.componentName.toLowerCase())) {
+       let response = `**Diagnosing: ${component.componentName}**\n\n`;
+       response += `**Function**: ${component.function}\n`;
+       response += `**Location**: ${component.location}\n\n`;
+       response += `**Potential Failures**:\n`;
+       component.failureModes.forEach(mode => {
+         response += `\n• **${mode.failureName}**\n`;
+         response += `  - Cause: ${mode.rootCause}\n`;
+         response += `  - Fix Level: ${mode.fixLevel} (${mode.estimatedCostUSD})\n`;
+       });
+       return response;
     }
   }
   
@@ -629,7 +680,7 @@ function handleMaintenance(input: string): string {
   }
   
   // Generic maintenance schedule
-  return `**Standard Maintenance Schedule**\n\nHere's a general maintenance timeline for most vehicles:\n\n**Every 5,000-7,500 miles**:\n• Oil and oil filter change\n• Tire rotation\n• Visual inspection\n\n**Every 15,000-30,000 miles**:\n• Air filter replacement\n• Cabin air filter replacement\n\n**Every 30,000-50,000 miles**:\n• Spark plugs (varies by type)\n• Brake inspection/replacement\n• Coolant flush\n• Transmission fluid check\n\n**Every 3-5 years**:\n• Battery replacement\n• Brake fluid flush\n\n**As needed**:\n• Wiper blades (6-12 months)\n• Tires (30,000-70,000 miles)\n\nWhich specific maintenance item would you like to know more about? I can provide detailed intervals, costs, and even recommend parts!`;
+  return `**Standard Maintenance Schedule**\n\nHere's a general maintenance timeline for most vehicles:\n\n**Every 5,000-7,500 miles**:\n• Oil and oil filter change\n• Tire rotation\n• Visual inspection\n\n**Every 15,000-30,000 miles**:\n• Air filter replacement\n• Cabin air filter replacement\n• Check brake pads\n\n**Every 30,000-60,000 miles**:\n• Transmission fluid service\n• Coolant flush\n• Brake fluid flush\n• Spark plugs (copper)\n\n**Every 60,000-100,000 miles**:\n• Timing belt (if equipped)\n• Spark plugs (iridium/platinum)\n• Shock absorbers/struts\n\n**Always check your owner's manual** as it is the ultimate authority for your specific vehicle!`;
 }
 
 // Handle how-to queries
@@ -674,6 +725,94 @@ function handleSpecification(input: string): string {
   return `I can provide detailed specifications and information about most vehicles! What would you like to know?\n\n**I can help with**:\n• Engine specifications\n• Reliability ratings and common issues\n• Generational differences\n• Maintenance requirements\n• Vehicle comparisons\n\nJust tell me the vehicle make and model, and what information you need!`;
 }
 
+function handleSeasonalQuery(input: string): string {
+  const month = new Date().getMonth();
+  let season: 'winter' | 'spring' | 'summer' | 'fall';
+  
+  if (input.includes('winter')) season = 'winter';
+  else if (input.includes('summer')) season = 'summer';
+  else if (input.includes('spring')) season = 'spring';
+  else if (input.includes('fall') || input.includes('autumn')) season = 'fall';
+  else {
+    // Auto-detect
+    if (month >= 11 || month <= 1) season = 'winter';
+    else if (month >= 2 && month <= 4) season = 'spring';
+    else if (month >= 5 && month <= 7) season = 'summer';
+    else season = 'fall';
+  }
+
+  const tips = seasonalTips[season];
+  let response = `**${season.charAt(0).toUpperCase() + season.slice(1)} Driving & Maintenance Tips** 🌤️\n\n`;
+  response += tips.map(tip => `• ${tip}`).join('\n');
+
+  if (season === 'winter') {
+    response += `\n\n**Winter Driving Safety**:\n`;
+    response += winterDriving.slice(0, 4).map(d => `• ${d}`).join('\n');
+  }
+
+  return response;
+}
+
+function handleMoneySavingQuery(input: string): string {
+  const tips = moneySavingTips;
+  // Return random 5 tips
+  const randomTips = tips.sort(() => 0.5 - Math.random()).slice(0, 5);
+  
+  let response = `**💰 Money Saving Automotive Tips**\n\n`;
+  response += randomTips.map(tip => `• ${tip}`).join('\n');
+  response += `\n\n**Need tools?** Doing it yourself is the biggest money saver. Ask me about "recommended tools"!`;
+  
+  return response;
+}
+
+function handleToolsQuery(input: string): string {
+  const tools = recommendedTools;
+  let response = `**🛠️ Recommended Tools for DIYers**\n\n`;
+  
+  tools.forEach(tool => {
+    response += `**${tool.name}** (${tool.priority})\n`;
+    response += `• Uses: ${tool.uses}\n`;
+    response += `• Est. Cost: ${tool.cost}\n\n`;
+  });
+  
+  return response;
+}
+
+function handleEncyclopediaQuery(input: string): string {
+  const lowerInput = input.toLowerCase();
+  
+  // Search in automotiveEncyclopedia
+  // This is a deep search since the structure is nested
+  for (const [category, content] of Object.entries(automotiveEncyclopedia)) {
+     // Iterate deeper
+     for (const [subKey, value] of Object.entries(content as any)) {
+        if (typeof value === 'object') {
+           // Level 3
+           for (const [term, definition] of Object.entries(value as any)) {
+              if (lowerInput.includes(term.toLowerCase())) {
+                 return `**Encyclopedia: ${term.replace(/([A-Z])/g, ' $1').trim()}**\n\n${definition}`;
+              }
+           }
+        } else {
+           if (lowerInput.includes(subKey.toLowerCase())) {
+              return `**Encyclopedia: ${subKey.replace(/([A-Z])/g, ' $1').trim()}**\n\n${value}`;
+           }
+        }
+     }
+  }
+
+  // Check comprehensiveKnowledge
+  for (const [cat, content] of Object.entries(comprehensiveKnowledge)) {
+    for (const [term, def] of Object.entries(content as any)) {
+       if (lowerInput.includes(term.toLowerCase())) {
+          return `**Info: ${term.replace(/([A-Z])/g, ' $1').trim()}**\n\n${def}`;
+       }
+    }
+  }
+
+  return `I have a vast database of automotive terms! Try asking about specific components like "what is a camshaft" or systems like "how does ABS work".`;
+}
+
 export function generateAIResponse(
   userInput: string, 
   imageData?: string | null
@@ -685,6 +824,20 @@ export function generateAIResponse(
   // Classify the query
   const queryClass = classifyQuery(input);
   
+  // Route to appropriate handler
+  if (queryClass.type === 'seasonal') {
+    return { message: handleSeasonalQuery(input), imageAnalysis: imageAnalysis || undefined };
+  }
+  if (queryClass.type === 'money') {
+    return { message: handleMoneySavingQuery(input), imageAnalysis: imageAnalysis || undefined };
+  }
+  if (queryClass.type === 'tools') {
+    return { message: handleToolsQuery(input), imageAnalysis: imageAnalysis || undefined };
+  }
+  if (queryClass.type === 'encyclopedia') {
+    return { message: handleEncyclopediaQuery(input), imageAnalysis: imageAnalysis || undefined };
+  }
+
   // Handle non-parts queries
   if (queryClass.type === 'troubleshooting' && !imageData) {
     return {
@@ -829,7 +982,7 @@ export function generateAIResponse(
       // Check if it's a general question
       if (queryClass.type === 'general') {
         return {
-          message: `Hello! I'm your AutoParts AI Assistant with comprehensive vehicle knowledge. I can help you with:\n\n**🔧 Parts Recommendations**\n• Find and compare auto parts across 5 major retailers\n• ML-powered compatibility matching\n• Price comparison with shipping info\n\n**🔍 Troubleshooting**\n• Diagnose symptoms (noises, warning lights, performance issues)\n• Identify likely causes\n• Recommend solutions\n\n**📅 Maintenance Guidance**\n• Service intervals and schedules\n• DIY difficulty ratings\n• Cost estimates\n\n**📖 How-To Guides**\n• Step-by-step repair instructions\n• Safety tips and best practices\n• Tool requirements\n\n**📊 Vehicle Information**\n• Specifications and comparisons\n• Reliability insights\n• Common issues by model\n\n**How can I help you today?** Ask me anything about vehicles, parts, repairs, or maintenance!`,
+          message: `Hello! I'm **PIYESA** (Parts Identification and Yield-based Engine Search Assistant). I can help you with:\n\n**🔧 Parts Recommendations**\n• Find and compare auto parts across 5 major retailers\n• ML-powered compatibility matching\n• Price comparison with shipping info\n\n**🔍 Troubleshooting**\n• Diagnose symptoms (noises, warning lights, performance issues)\n• Identify likely causes\n• Recommend solutions\n\n**📅 Maintenance Guidance**\n• Service intervals and schedules\n• DIY difficulty ratings\n• Cost estimates\n\n**📖 How-To Guides**\n• Step-by-step repair instructions\n• Safety tips and best practices\n• Tool requirements\n\n**📊 Vehicle Information**\n• Specifications and comparisons\n• Reliability insights\n• Common issues by model\n\n**How can I help you today?** Ask me anything about vehicles, parts, repairs, or maintenance!`,
           imageAnalysis: imageAnalysis || undefined,
         };
       }

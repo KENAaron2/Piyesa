@@ -1402,3 +1402,336 @@ export const partTroubleshooting = {
     }
   }
 };
+
+
+// Interfaces for the diagnostic structure
+
+/** Represents a specific symptom or event the driver experiences. */
+export interface Symptom {
+  name: string;
+  description: string;
+  severity: "Low" | "Moderate" | "High" | "Critical";
+}
+
+/** Represents a single failure mode, its cause, and the repair steps. */
+export interface FailureMode {
+  failureName: string;
+  commonSymptoms: string[]; // References Symptom names
+  rootCause: string;
+  fixLevel: "DIY" | "Intermediate" | "Professional";
+  fixSteps: string[];
+  estimatedCostUSD: string;
+}
+
+/** Represents a major component and its potential failure modes. */
+export interface CarComponent {
+  componentName: string;
+  function: string;
+  location: string;
+  failureModes: FailureMode[];
+}
+
+/** The top-level knowledge base structure. */
+export interface AutomotiveKnowledgeBase {
+  symptoms: Symptom[];
+  components: CarComponent[];
+}
+
+
+
+export const automotiveDiagnosticKnowledge: AutomotiveKnowledgeBase = {
+  // --- A. SYMPTOMS LIST ---
+  // Centralized list of symptoms for consistent reference
+  symptoms: [
+    { name: "SquealingBrakes", description: "High-pitched noise when applying brakes.", severity: "Low" },
+    { name: "GrindingBrakes", description: "Rough, metal-on-metal noise when braking.", severity: "High" },
+    { name: "RoughIdle", description: "Engine shakes or runs unevenly while stopped.", severity: "Moderate" },
+    { name: "NoCrankNoStart", description: "Turning the key results in silence or a single click.", severity: "Critical" },
+    { name: "EngineOverheating", description: "Temperature gauge moves into the red zone.", severity: "Critical" },
+    { name: "SlippingClutch", description: "Engine RPM increases but speed does not keep up.", severity: "High" },
+    { name: "CheckEngineLight", description: "Illumination of the amber engine icon.", severity: "Moderate" },
+    { name: "SteeringPull", description: "Vehicle drifts to one side when driving straight.", severity: "Moderate" },
+  ],
+
+  // --- B. COMPONENTS AND FAILURE MODES ---
+  components: [
+    // --- 1. BRAKE SYSTEM ---
+    {
+      componentName: "Brake Pads and Rotors",
+      function: "Converts kinetic energy to thermal energy to slow the vehicle.",
+      location: "Behind the wheels (caliper housing).",
+      failureModes: [
+        {
+          failureName: "Worn Brake Pads",
+          commonSymptoms: ["SquealingBrakes", "GrindingBrakes"],
+          rootCause: "Friction material wear reaching the built-in wear indicator (squealer tab).",
+          fixLevel: "Intermediate",
+          fixSteps: [
+            "Inspect pad thickness (min 3mm).",
+            "Remove caliper and old pads.",
+            "Compress caliper piston.",
+            "Install new pads and lubricate slide pins.",
+          ],
+          estimatedCostUSD: "$50 - $200 per axle (Parts)",
+        },
+        {
+          failureName: "Warped/Scored Rotors",
+          commonSymptoms: ["VibratingSteeringWheel", "GrindingBrakes"],
+          rootCause: "Excessive heat (warping) or deep grooves from metal-on-metal contact.",
+          fixLevel: "Intermediate",
+          fixSteps: [
+            "Check for visible scoring or measure run-out.",
+            "Replace pads and rotors as a set.",
+            "Follow proper break-in procedure (bedding).",
+          ],
+          estimatedCostUSD: "$100 - $400 per axle (Parts)",
+        },
+      ],
+    },
+
+    // --- 2. IGNITION & FUEL SYSTEM ---
+    {
+      componentName: "Spark Plugs",
+      function: "Ignites the air-fuel mixture in the cylinder.",
+      location: "Threaded into the cylinder head.",
+      failureModes: [
+        {
+          failureName: "Fouled Spark Plugs",
+          commonSymptoms: ["RoughIdle", "CheckEngineLight"],
+          rootCause: "Oil, carbon, or fuel deposits coating the electrode, preventing spark.",
+          fixLevel: "DIY",
+          fixSteps: [
+            "Remove spark plug and inspect tip color.",
+            "If fouled, replace the plugs (and check for source of fouling, e.g., leaky valve cover gasket).",
+            "Torque new plugs to specification (crucial!).",
+          ],
+          estimatedCostUSD: "$20 - $100 (Parts)",
+        },
+        // To expand: Add "Worn Electrode Gap" or "Failed Coil Pack" here
+      ],
+    },
+    {
+      componentName: "Fuel Pump",
+      function: "Pumps fuel from the gas tank to the engine's fuel rail under pressure.",
+      location: "Inside the fuel tank or along the fuel line (depending on vehicle).",
+      failureModes: [
+        {
+          failureName: "Fuel Pump Failure",
+          commonSymptoms: ["NoCrankNoStart", "EngineStalls"],
+          rootCause: "Electrical failure, physical wear, or running the tank consistently low (leads to overheating).",
+          fixLevel: "Professional",
+          fixSteps: [
+            "Verify lack of voltage or pressure at the fuel rail/pump.",
+            "Disconnect battery and fuel lines.",
+            "Access and replace the fuel pump module.",
+            "Clear any related ECU codes.",
+          ],
+          estimatedCostUSD: "$500 - $1200 (Parts + Labor)",
+        },
+      ],
+    },
+    
+    // --- 3. COOLING SYSTEM ---
+    {
+      componentName: "Thermostat",
+      function: "Regulates engine operating temperature by controlling coolant flow to the radiator.",
+      location: "Near the engine block, usually where the upper radiator hose connects.",
+      failureModes: [
+        {
+          failureName: "Stuck Closed Thermostat",
+          commonSymptoms: ["EngineOverheating", "LowerHoseCold"],
+          rootCause: "Corrosion or spring failure prevents valve from opening.",
+          fixLevel: "Intermediate",
+          fixSteps: [
+            "Drain a small amount of coolant.",
+            "Locate and remove the thermostat housing/gasket.",
+            "Replace thermostat and gasket, refill and bleed coolant system.",
+          ],
+          estimatedCostUSD: "$30 - $150 (Parts)",
+        },
+        {
+          failureName: "Stuck Open Thermostat",
+          commonSymptoms: ["EngineTakesLongToHeat", "LowHeaterOutput"],
+          rootCause: "Spring failure or debris prevents valve from fully closing.",
+          fixLevel: "Intermediate",
+          fixSteps: [
+            "Replace thermostat (same steps as 'Stuck Closed').",
+            "This failure is less dangerous but causes poor fuel economy and performance.",
+          ],
+          estimatedCostUSD: "$30 - $150 (Parts)",
+        },
+      ],
+    },
+
+    // --- 4. SUSPENSION & STEERING ---
+    {
+      componentName: "Ball Joints",
+      function: "Connects the control arms to the steering knuckle, allowing for steering and suspension movement.",
+      location: "Top and/or bottom of the steering knuckle.",
+      failureModes: [
+        {
+          failureName: "Worn/Failing Ball Joint",
+          commonSymptoms: ["ClunkingNoiseOverBumps", "SteeringPull"],
+          rootCause: "Loss of lubrication and wear due to torn dust boot.",
+          fixLevel: "Professional",
+          fixSteps: [
+            "Visually inspect for torn boot and play.",
+            "Lift the vehicle and check for movement/free play.",
+            "Press out old joint and press in new one (requires specialized tools).",
+            "Perform wheel alignment.",
+          ],
+          estimatedCostUSD: "$250 - $600 per corner (Parts + Labor)",
+        },
+      ],
+    },
+    
+    // ... continue adding hundreds more entries like this for
+    // Oxygen Sensors, Alternator, Water Pump, CV Joints, etc.
+  ],
+};
+
+
+// --- 1. NEW INTERFACES FOR DIAGNOSTICS ---
+
+/** Represents a single question in the diagnostic flow. */
+export interface DiagnosticQuestion {
+  id: string;
+  text: string;
+  componentArea: string; // e.g., "Ignition", "Brakes", "Cooling"
+  options: {
+    answer: string;
+    // Score associated with the answer, used for mapping to failure modes
+    score: number;
+    // Optional: ID of the next question to ask, creating a tree structure
+    nextQuestionId?: string;
+  }[];
+}
+
+/** Maps scores from the questions to probable component failures. */
+export interface FailureMapping {
+  failureMode: string; // References the 'failureName' in the main knowledge base
+  componentName: string; // References the 'componentName'
+  minScore: number;
+  maxScore: number;
+  confidence: "Low" | "Medium" | "High";
+}
+
+// --- 2. EXPANDED KNOWLEDGE BASE ---
+
+export const diagnosticQuestions: DiagnosticQuestion[] = [
+  // --- A. IGNITION SYSTEM DIAGNOSTICS ---
+  {
+    id: "IGN-Q1",
+    text: "When you turn the key, what is the initial sound or behavior?",
+    componentArea: "Ignition",
+    options: [
+      { answer: "Nothing (No crank, silent).", score: 10, nextQuestionId: "IGN-Q2" },
+      { answer: "A single, loud click, then nothing.", score: 8, nextQuestionId: "IGN-Q2" },
+      { answer: "A slow, weak 'chug-chug-chug' sound.", score: 5, nextQuestionId: "IGN-Q3" },
+      { answer: "Engine cranks normally, but doesn't start.", score: 3, nextQuestionId: "IGN-Q4" },
+    ],
+  },
+  {
+    id: "IGN-Q2",
+    text: "Do the dashboard lights and headlights work normally (bright) or are they dim?",
+    componentArea: "Ignition",
+    options: [
+      { answer: "Lights are bright/normal.", score: 10, nextQuestionId: "IGN-Q5" },
+      { answer: "Lights are dim or flicker.", score: 6 },
+    ],
+  },
+  {
+    id: "IGN-Q3",
+    text: "Has the engine started successfully since the weather turned cold?",
+    componentArea: "Ignition",
+    options: [
+      { answer: "Yes, it just started having trouble.", score: 4 },
+      { answer: "No, this is the first cold snap.", score: 6 },
+    ],
+  },
+  {
+    id: "IGN-Q4",
+    text: "Do you smell a strong odor of gasoline after extended cranking?",
+    componentArea: "Ignition",
+    options: [
+      { answer: "Yes, a strong gas smell.", score: 2, nextQuestionId: "FUEL-Q1" },
+      { answer: "No unusual smell.", score: 4 },
+    ],
+  },
+  {
+    id: "IGN-Q5",
+    text: "When you try to start, do you hear a high-pitched 'whirring' sound?",
+    componentArea: "Ignition",
+    options: [
+      { answer: "Yes, a whirring/grinding sound.", score: 10 },
+      { answer: "No, just silence or a click.", score: 8 },
+    ],
+  },
+
+  // --- B. BRAKE SYSTEM DIAGNOSTICS (Sample Start) ---
+  {
+    id: "BRAKE-Q1",
+    text: "Is the noise always present when the brakes are applied, or only sometimes?",
+    componentArea: "Brakes",
+    options: [
+      { answer: "Always present and consistent.", score: 5 },
+      { answer: "Occasional or only when wet.", score: 2 },
+    ],
+  },
+  // ... continue adding hundreds of questions for other systems
+];
+
+export const failureMappings: FailureMapping[] = [
+  // --- IGNITION SYSTEM MAPPINGS ---
+  {
+    failureMode: "Starter Motor Solenoid Failure",
+    componentName: "Starter Motor",
+    minScore: 8,
+    maxScore: 10,
+    confidence: "High",
+  },
+  {
+    failureMode: "Weak/Dead Battery",
+    componentName: "Battery",
+    minScore: 4,
+    maxScore: 8,
+    confidence: "Medium",
+  },
+  {
+    failureMode: "Fuel Pump Failure",
+    componentName: "Fuel Pump",
+    minScore: 2,
+    maxScore: 4,
+    confidence: "Medium",
+  },
+  {
+    failureMode: "Corroded Battery Terminals",
+    componentName: "Battery",
+    minScore: 6,
+    maxScore: 7,
+    confidence: "Medium",
+  },
+  {
+    failureMode: "Starter Motor Gear Wear",
+    componentName: "Starter Motor",
+    minScore: 9,
+    maxScore: 10, // Maps directly to IGN-Q5 answer
+    confidence: "High",
+  },
+
+  // --- BRAKE SYSTEM MAPPINGS (Sample Start) ---
+  {
+    failureMode: "Worn Brake Pads",
+    componentName: "Brake Pads and Rotors",
+    minScore: 5,
+    maxScore: 7,
+    confidence: "High",
+  },
+  // ... continue adding hundreds of mappings
+];
+
+/**
+ * NOTE: The main `automotiveDiagnosticKnowledge` from the previous response
+ * must remain to provide the `failureMode` and `componentName` definitions.
+ * The new data structures above link back to those established names.
+ */
